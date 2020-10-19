@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
 
 import Header from './components/Header';
+import ToDoItem from './components/ToDoItem';
 
 export default function App() {
   const [toDos, setToDos] = useState([
@@ -9,6 +10,13 @@ export default function App() {
     { text: "create an app", key: "2" },
     { text: "play on the switch", key: "3" }
   ]);
+
+  const pressHandler = (key) => {
+    setToDos((prevToDos) => {
+      return prevToDos.filter((todo) => todo.key !== key);
+    })
+  }
+
   return (
     <View style={styles.container}>
       {/* header  */}
@@ -18,7 +26,7 @@ export default function App() {
         <View style={styles.list}>
           <FlatList
             data={toDos}
-            renderItem={({ item }) => <Text>{item.text}</Text>}
+            renderItem={({ item }) => <ToDoItem item={item} pressHandler={pressHandler} />}
           />
         </View>
       </View>
