@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import { StyleSheet, Text, View, FlatList, Alert } from "react-native";
 
-import Header from './components/Header';
-import ToDoItem from './components/ToDoItem';
+import Header from "./components/Header";
+import ToDoItem from "./components/ToDoItem";
+import AddToDo from "./components/AddToDo";
 
 export default function App() {
   const [toDos, setToDos] = useState([
@@ -14,19 +15,32 @@ export default function App() {
   const pressHandler = (key) => {
     setToDos((prevToDos) => {
       return prevToDos.filter((todo) => todo.key !== key);
-    })
-  }
+    });
+  };
+
+  const submitHandler = (text) => {
+    if (text.length > 3) {
+      setToDos((prevToDos) => {
+        return [{ text, key: Math.random().toString() }, ...prevToDos];
+      });
+    } else {
+      Alert.alert("OOPS!", "toDos must be over 3 chars long", [
+        { text: "Undetstood", onPress: () => console.log("alert closed") }
+      ]);
+    }
+  };
 
   return (
     <View style={styles.container}>
-      {/* header  */}
       <Header />
       <View style={styles.content}>
-        {/* to form  */}
+        <AddToDo submitHandler={submitHandler} />
         <View style={styles.list}>
           <FlatList
             data={toDos}
-            renderItem={({ item }) => <ToDoItem item={item} pressHandler={pressHandler} />}
+            renderItem={({ item }) => (
+              <ToDoItem item={item} pressHandler={pressHandler} />
+            )}
           />
         </View>
       </View>
